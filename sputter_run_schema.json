@@ -294,6 +294,64 @@
         "grid_columns": 6
       }
     },
+    "gasFlowRate": {
+      "type": "number",
+      "propertyOrder": 8,
+      "description": "Gas flow rate (gal/min)",
+      "default": 1.0,
+      "options": {
+        "grid_columns": 6,
+        "grid_break": true
+      }
+    },
+    "label1": {
+      "format": "info",
+      "title": "Pre-sputter chamber status",
+      "propertyOrder": 9,
+      "options": {
+        "grid_columns": 2,
+        "grid_offset": 5,
+        "grid_break": true
+      }
+    },
+    "basePressure": {
+      "type": "number",
+      "propertyOrder": 10,
+      "description": "Base pressure (Torr)",
+      "default": 1.0e-6,
+      "options": {
+        "grid_columns": 4
+      }
+    },
+    "leakRate": {
+      "type": "number",
+      "propertyOrder": 11,
+      "description": "Leak rate (Torr/min)",
+      "default": 1.0e-6,
+      "options": {
+        "grid_columns": 4
+      }
+    },
+    "cryoTemp": {
+      "type": "number",
+      "propertyOrder": 12,
+      "description": "Cryo temperature (K)",
+      "default": 12.0,
+      "options": {
+        "grid_columns": 4,
+        "grid_break": true
+      }
+    },
+    "label2": {
+      "format": "info",
+      "title": "Sputter parameters",
+      "propertyOrder": 13,
+      "options": {
+        "grid_columns": 2,
+        "grid_offset": 5,
+        "grid_break": true
+      }
+    },
     "blueGun": {
       "type": "object",
       "$ref": "#/definitions/coloredGun",
