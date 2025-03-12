@@ -17,17 +17,13 @@ depositions = [
     {
         "prefix": "JHAMAL",
         "metadata": {
-            "creators": [],
-            "relatedIdentifiers": [],
-            "title": "Pure Nb foil",
+            "titles": [{"title": "Pure Nb foil"}],
         },
     },
     {
         "prefix": "JHAMAL",
         "metadata": {
-            "creators": [],
-            "relatedIdentifiers": [],
-            "title": "Pure Ti foil",
+            "titles": [{"title": "Pure Ti foil"}],
         }
     },
 ]
