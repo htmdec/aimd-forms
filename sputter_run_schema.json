@@ -255,6 +255,7 @@
     },
     "gunMeasurement": {
       "type": "object",
+      "id": "gun_measurement",
       "format": "grid-strict",
       "properties": {
         "voltage": {
@@ -277,7 +278,13 @@
           "type": "number",
           "description": "Power (W)",
           "propertyOrder": 3,
+          "watch": {
+            "voltage": "gun_measurement.voltage",
+            "current": "gun_measurement.current"
+          },
+          "template": "{{multiply voltage current}}",
           "options": {
+            "readonly": true,
             "grid_columns": 4,
             "grid_break": true
           }
@@ -351,13 +358,13 @@
             "grid_break": true
           }
         },
-        "purple": {
+        "yellow": {
           "type": "object",
           "$ref": "#/definitions/gunMeasurement",
-          "title": "Purple Gun",
+          "title": "Yellow Gun",
           "options": {
             "dependencies": {
-              "root.purpleGun.used": true
+              "root.yellowGun.used": true
             },
             "grid_columns": 12,
             "grid_break": true
@@ -532,7 +539,7 @@
     "sputterType": {
       "type": "string",
       "propertyOrder": 2,
-      "description": "The age of the person.",
+      "description": "The type of sputter run",
       "options": {
         "grid_columns": 6,
         "grid_break": true
@@ -550,6 +557,7 @@
         "Si",
         "SiO2",
         "Glass",
+        "Brass",
         "Other"
       ],
       "options": {
@@ -685,12 +693,12 @@
         "grid_columns": 12
       }
     },
-    "purpleGun": {
+    "yellowGun": {
       "type": "object",
       "$ref": "#/definitions/coloredGun",
       "propertyOrder": 17,
-      "title": "Purple Gun",
-      "description": "Purple gun",
+      "title": "Yellow Gun",
+      "description": "Yellow gun",
       "options": {
         "grid_columns": 12
       }

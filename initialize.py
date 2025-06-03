@@ -1,5 +1,7 @@
-import os
 import json
+import os
+
+import rjsmin
 from girder_client import GirderClient
 
 gc = GirderClient(apiUrl="https://girder.local.xarthisius.xyz/api/v1")
@@ -24,7 +26,7 @@ depositions = [
         "prefix": "JHAMAL",
         "metadata": {
             "titles": [{"title": "Pure Ti foil"}],
-        }
+        },
     },
 ]
 
@@ -34,7 +36,7 @@ for deposition in depositions:
         parameters={
             "prefix": deposition["prefix"],
             "metadata": json.dumps(deposition["metadata"]),
-        }
+        },
     )
 
 with open("power_supply_schema.json") as f:
@@ -42,10 +44,10 @@ with open("power_supply_schema.json") as f:
 
 ps_form = gc.post(
     "form",
+    data={"schema": json.dumps(schema)},
     parameters={
         "name": schema["title"],
         "description": schema["description"],
-        "schema": json.dumps(schema),
         "folderId": None,
         "pathTemplate": None,
         "entryFileName": None,
@@ -89,7 +91,7 @@ guns = [
     {
         "name": "Gun 1",
         "manufacturer": "MDX",
-        "geometry": "Geometry 1",
+        "geometry": "Linear",
         "serialNumber": "123456",
         "gunType": "Gun Type 1",
         "size": "Small",
@@ -97,7 +99,7 @@ guns = [
     {
         "name": "Gun 2",
         "manufacturer": "MDX",
-        "geometry": "Geometry 2",
+        "geometry": "Round",
         "serialNumber": "654321",
         "gunType": "Gun Type 2",
         "size": "Medium",
@@ -105,7 +107,7 @@ guns = [
     {
         "name": "Gun 3",
         "manufacturer": "MDX",
-        "geometry": "Geometry 3",
+        "geometry": "Linear",
         "serialNumber": "789012",
         "gunType": "Gun Type 3",
         "size": "Large",
@@ -113,7 +115,7 @@ guns = [
     {
         "name": "Gun 4",
         "manufacturer": "MDX",
-        "geometry": "Geometry 1",
+        "geometry": "Linear",
         "serialNumber": "210987",
         "gunType": "Gun Type 1",
         "size": "Small",
@@ -132,14 +134,15 @@ with open("target_source_schema.json") as f:
     schema = json.load(f)
 target_source_form = gc.post(
     "form",
+    data={"schema": json.dumps(schema)},
     parameters={
         "name": schema["title"],
         "description": schema["description"],
-        "schema": json.dumps(schema),
         "folderId": None,
         "pathTemplate": None,
         "entryFileName": None,
         "gdriveFolderId": None,
+        "jsHelpers": rjsmin.jsmin(open("target_source_schema.js", "r").read()),
         "uniqueField": "sampleId",
     },
 )
@@ -177,14 +180,15 @@ source = (
 schema["properties"]["sources"]["items"]["properties"]["source"]["enumSource"] = source
 target_form = gc.post(
     "form",
+    data={"schema": json.dumps(schema)},
     parameters={
         "name": schema["title"],
         "description": schema["description"],
-        "schema": json.dumps(schema),
         "folderId": None,
         "pathTemplate": None,
         "entryFileName": None,
         "gdriveFolderId": None,
+        "jsHelpers": rjsmin.jsmin(open("target_schema.js", "r").read()),
         "uniqueField": "name",
     },
 )
@@ -192,21 +196,27 @@ target_form = gc.post(
 with open("sputter_run_schema.json") as f:
     schema = json.load(f)
 
-schema["definitions"]["sputter"]["properties"]["gun"]["enumSource"] = f"girder.formId:{gun_form['_id']}"
-schema["definitions"]["sputter"]["properties"]["target"]["enumSource"] = f"girder.formId:{target_form['_id']}"
-schema["definitions"]["sputter"]["properties"]["powerSupply"]["enumSource"] = f"girder.formId:{ps_form['_id']}"
+schema["definitions"]["sputter"]["properties"]["gun"][
+    "enumSource"
+] = f"girder.formId:{gun_form['_id']}"
+schema["definitions"]["sputter"]["properties"]["target"][
+    "enumSource"
+] = f"girder.formId:{target_form['_id']}"
+schema["definitions"]["sputter"]["properties"]["powerSupply"][
+    "enumSource"
+] = f"girder.formId:{ps_form['_id']}"
 
 form = gc.post(
     "form",
+    data={"schema": json.dumps(schema)},
     parameters={
         "name": schema["title"],
         "description": schema["description"],
-        "schema": json.dumps(schema),
         "folderId": None,
         "pathTemplate": None,
         "entryFileName": None,
         "gdriveFolderId": None,
-        "uniqueField": "sputterRunId",
+        "jsHelpers": rjsmin.jsmin(open("sputter_run_schema.js", "r").read()),
+        "uniqueField": "assignedIGSN",
     },
 )
-
