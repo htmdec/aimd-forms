@@ -527,21 +527,12 @@
         "grid_columns": 12
       }
     },
-    "name": {
-      "type": "string",
-      "title": "User",
-      "description": "The name of the person doing the sputter run.",
-      "options": {
-        "grid_columns": 6
-      },
-      "propertyOrder": 1
-    },
     "sputterType": {
       "type": "string",
       "propertyOrder": 2,
       "description": "The type of sputter run",
       "options": {
-        "grid_columns": 6,
+        "grid_columns": 12,
         "grid_break": true
       },
       "enum": [

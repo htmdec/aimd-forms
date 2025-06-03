@@ -71,8 +71,7 @@
     },
     "purchaseOrder": {
       "type": "string",
-      "description": "URL to the purchase order, e.g., 'https://example.com/PO123456'",
-      "format": "url"
+      "description": "URL to the purchase order, e.g., 'https://example.com/PO123456'"
     },
     "purity": {
       "type": "number",

@@ -17,15 +17,31 @@ for deposition in gc.get("deposition"):
 
 depositions = [
     {
-        "prefix": "JHAMAL",
+        "prefix": "JHBMAA",
         "metadata": {
-            "titles": [{"title": "Pure Nb foil"}],
+            "titles": [{"title": "Pure Al foil"}],
+            "attributes": {
+                "alternateIdentifiers": [
+                    {
+                        "alternateIdentifier": "Al20230428",
+                        "alternateIdentifierType": "local",
+                    }
+                ]
+            },
         },
     },
     {
-        "prefix": "JHAMAL",
+        "prefix": "JHBMAA",
         "metadata": {
-            "titles": [{"title": "Pure Ti foil"}],
+            "titles": [{"title": "Pure Al foil"}],
+            "attributes": {
+                "alternateIdentifiers": [
+                    {
+                        "alternateIdentifier": "Al20250520",
+                        "alternateIdentifierType": "local",
+                    }
+                ]
+            },
         },
     },
 ]
@@ -93,7 +109,7 @@ guns = [
         "manufacturer": "MDX",
         "geometry": "Linear",
         "serialNumber": "123456",
-        "gunType": "Gun Type 1",
+        "gunType": "DC",
         "size": "Small",
     },
     {
@@ -101,7 +117,7 @@ guns = [
         "manufacturer": "MDX",
         "geometry": "Round",
         "serialNumber": "654321",
-        "gunType": "Gun Type 2",
+        "gunType": "DC",
         "size": "Medium",
     },
     {
@@ -109,7 +125,7 @@ guns = [
         "manufacturer": "MDX",
         "geometry": "Linear",
         "serialNumber": "789012",
-        "gunType": "Gun Type 3",
+        "gunType": "RF",
         "size": "Large",
     },
     {
@@ -117,8 +133,16 @@ guns = [
         "manufacturer": "MDX",
         "geometry": "Linear",
         "serialNumber": "210987",
-        "gunType": "Gun Type 1",
+        "gunType": "DC",
         "size": "Small",
+    },
+    {
+        "name": "Gun 5",
+        "manufacturer": "Angstrom Sciences",
+        "geometry": "Linear",
+        "serialNumber": "",
+        "gunType": "DC",
+        "size": '5"x12"',
     },
 ]
 for gun in guns:
@@ -148,17 +172,17 @@ target_source_form = gc.post(
 )
 
 depositions = gc.get("deposition")
-elements = ["Nb", "Ti", "Fe", "Cl"]
+elements = ["Al", "Al"]
 for i, deposition in enumerate(depositions):
     element = elements[i]
     data = {
         "IGSN": deposition["igsn"],
-        "contaminants": "S, Fe, Cl",
+        "contaminants": "",
         "depositionId": deposition["_id"],
         "element": element,
         "lookup": f"{deposition['igsn']} - {deposition['_id']}",
-        "manufacturer": "MDX",
-        "purchaseOrder": "https://foo.com/1234",
+        "manufacturer": "Process Materials",
+        "purchaseOrder": "",
         "purity": 99.99,
         "sampleId": f"{deposition['igsn']} - {element}",
     }
