@@ -13,7 +13,7 @@
           "source": {
             "type": "string",
             "description": "The ID of the source file to be included in the build.",
-            "enumSource": "girder.formId"
+            "enumSource": "girder.formId:684c34979827d47f69fc31cd:{entry[data][element]} - {entry[_id]}"
           },
           "element": {
             "type": "string",

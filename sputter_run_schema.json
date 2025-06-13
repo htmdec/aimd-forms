@@ -409,7 +409,7 @@
       "properties": {
         "gun": {
           "type": "string",
-          "enumSource": "girder.formId",
+          "enumSource": "girder.formId:684c32c09827d47f69fc31cc",
           "propertyOrder": 1,
           "options": {
             "grid_columns": 3
@@ -418,7 +418,7 @@
         "target": {
           "type": "string",
           "description": "Target material",
-          "enumSource": "girder.formId",
+          "enumSource": "girder.formId:684c35589827d47f69fc31ce",
           "propertyOrder": 2,
           "options": {
             "grid_columns": 3
@@ -427,7 +427,7 @@
         "powerSupply": {
           "type": "string",
           "description": "Power supply",
-          "enumSource": "girder.formId",
+          "enumSource": "girder.formId:684c320c9827d47f69fc31cb",
           "propertyOrder": 3,
           "options": {
             "grid_columns": 3
