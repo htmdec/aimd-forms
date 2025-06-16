@@ -24,7 +24,14 @@ window.JSONEditor.defaults.callbacks.autocomplete = {
         }
     },
     'get_deposition_value': function (editor, result) {
-        return `${result.igsn} - ${result._id}`;
+        try {
+          const localId = result.metadata.attributes.alternateIdentifiers.find(
+            (id) => id.alternateIdentifierType === 'local'
+          );
+          return `${result.igsn} - ${result._id} - (${localId.alternateIdentifier})`;
+        } catch (e) {
+          return `${result.igsn} - ${result._id} - (no localId)`;
+        }
     }
 };
 Handlebars.registerHelper('split', function (string, separator, index) {

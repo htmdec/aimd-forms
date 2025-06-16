@@ -23,10 +23,11 @@
       "description": "Sample ID",
       "readOnly": true,
       "propertyOrder": 1,
-      "template": "{{split IGSN '-' 0}} - {{element}}",
+      "template": "{{split IGSN '-' 0}} - {{element}} - ({{localId}})",
       "watch": {
           "IGSN": "lookup",
-          "element": "element"
+          "element": "element",
+          "localId": "localId"
       }
     },
     "depositionId": {
@@ -52,6 +53,18 @@
         "IGSN": "lookup"
       },
       "propertyOrder": 0
+    },
+    "localId": {
+      "type": "string",
+      "propertyOrder": 0,
+      "description": "Local ID for the powder",
+      "template": "{{split IGSN '-' 2}}",
+      "options": {
+        "hidden": true
+      },
+      "watch": {
+        "IGSN": "lookup"
+      }
     },
     "contaminants": {
       "type": "string",
