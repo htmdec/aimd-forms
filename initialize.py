@@ -12,8 +12,52 @@ for form in gc.get("form"):
     gc.delete("form/%s" % form["_id"])
 
 # Delete all existing depositions
-for deposition in gc.get("deposition"):
+for deposition in gc.get("deposition", parameters={"limit": 1000}):
     gc.delete("deposition/%s" % deposition["_id"])
+
+for collection in gc.get("/collection", parameters={"text": "HTMAX"}):
+    gc.delete("collection/%s" % collection["_id"])
+
+group = gc.get("/group", parameters={"text": "Testers", "exact": True})
+if not group:
+    group = gc.post("/group", parameters={"name": "Testers"})
+else:
+    group = group[0]
+
+user = gc.get("/user/me")
+
+access = {
+    "groups": [
+        {
+            "description": "",
+            "flags": [],
+            "id": group["_id"],
+            "level": 2,
+            "name": group["name"],
+        }
+    ],
+    "users": [
+        {
+            "flags": [],
+            "id": user["_id"],
+            "level": 2,
+            "login": user["login"],
+            "name": f"{user['firstName']} {user['lastName']}"
+        }
+    ],
+}
+
+try:
+    collection = gc.createCollection("HTMAX", "HT-MAX Collection")
+except Exception:
+    collection = gc.get("/collection", parameters={"text": "HTMAX"})[0]
+
+gc.put(f"/collection/{collection['_id']}/access", parameters={"access": json.dumps(access)})
+
+xrd_folder = gc.createFolder(
+    collection["_id"], "xrd_data", parentType="collection", reuseExisting=True
+)
+gc.put(f"/folder/{xrd_folder['_id']}/access", parameters={"access": json.dumps(access)})
 
 depositions = [
     {
@@ -47,13 +91,14 @@ depositions = [
 ]
 
 for deposition in depositions:
-    gc.post(
+    obj = gc.post(
         "deposition",
         parameters={
             "prefix": deposition["prefix"],
             "metadata": json.dumps(deposition["metadata"]),
         },
     )
+    gc.put(f"deposition/{obj['_id']}/access", parameters={"access": json.dumps(access)})
 
 with open("power_supply_schema.json") as f:
     schema = json.load(f)
@@ -71,6 +116,7 @@ ps_form = gc.post(
         "uniqueField": "name",
     },
 )
+gc.put(f"form/{ps_form['_id']}/access", parameters={"access": json.dumps(access)})
 
 power_supplies = [
     {"name": "PS1", "manufacturer": "MDX", "power": 1.5, "serialNumber": "109992"},
@@ -103,6 +149,7 @@ gun_form = gc.post(
         "uniqueField": "name",
     },
 )
+gc.put(f"form/{gun_form['_id']}/access", parameters={"access": json.dumps(access)})
 guns = [
     {
         "name": "Gun 1",
@@ -170,21 +217,24 @@ target_source_form = gc.post(
         "uniqueField": "sampleId",
     },
 )
+gc.put(f"form/{target_source_form['_id']}/access", parameters={"access": json.dumps(access)})
 
 depositions = gc.get("deposition")
 elements = ["Al", "Al"]
 for i, deposition in enumerate(depositions):
     element = elements[i]
+    local_id = deposition["metadata"]["attributes"]["alternateIdentifiers"][0]["alternateIdentifier"]
     data = {
         "IGSN": deposition["igsn"],
         "contaminants": "",
         "depositionId": deposition["_id"],
         "element": element,
-        "lookup": f"{deposition['igsn']} - {deposition['_id']}",
+        "localId": local_id,
+        "lookup": f"{deposition['igsn']} - {deposition['_id']} - ({local_id})",
         "manufacturer": "Process Materials",
         "purchaseOrder": "",
         "purity": 99.99,
-        "sampleId": f"{deposition['igsn']} - {element}",
+        "sampleId": f"{deposition['igsn']} - {element} - ({local_id})",
     }
     gc.post(
         "entry",
@@ -196,6 +246,7 @@ for i, deposition in enumerate(depositions):
 
 with open("target_schema.json") as f:
     schema = json.load(f)
+
 
 source = (
     f"girder.formId:{target_source_form['_id']}"
@@ -216,6 +267,7 @@ target_form = gc.post(
         "uniqueField": "name",
     },
 )
+gc.put(f"form/{target_form['_id']}/access", parameters={"access": json.dumps(access)})
 
 with open("sputter_run_schema.json") as f:
     schema = json.load(f)
@@ -244,3 +296,23 @@ form = gc.post(
         "uniqueField": "assignedIGSN",
     },
 )
+gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})
+
+with open("xrd_characterization.json") as f:
+    schema = json.load(f)
+
+form = gc.post(
+    "form",
+    data={"schema": json.dumps(schema)},
+    parameters={
+        "name": schema["title"],
+        "description": schema["description"],
+        "folderId": xrd_folder["_id"],
+        "pathTemplate": None,
+        "entryFileName": None,
+        "gdriveFolderId": None,
+        "jsHelpers": None,
+        "uniqueField": "assignedIGSN",
+    },
+)
+gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})
