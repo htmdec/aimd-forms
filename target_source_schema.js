@@ -15,7 +15,7 @@ window.JSONEditor.defaults.callbacks.autocomplete = {
     },
     'render_deposition': function (editor, result, props) {
         try {
-          const localId = result.metadata.attributes.alternateIdentifiers.find(
+          const localId = result.metadata.alternateIdentifiers.find(
               (id) => id.alternateIdentifierType === 'local'
           );
           return `<li ${props}> ${result.igsn} (localId: ${localId.alternateIdentifier})</li>`;
@@ -25,7 +25,7 @@ window.JSONEditor.defaults.callbacks.autocomplete = {
     },
     'get_deposition_value': function (editor, result) {
         try {
-          const localId = result.metadata.attributes.alternateIdentifiers.find(
+          const localId = result.metadata.alternateIdentifiers.find(
             (id) => id.alternateIdentifierType === 'local'
           );
           return `${result.igsn} - ${result._id} - ${localId.alternateIdentifier}`;

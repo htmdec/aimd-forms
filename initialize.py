@@ -26,6 +26,12 @@ else:
 
 user = gc.get("/user/me")
 
+creator = {
+    "givenName": user["firstName"],
+    "familyName": user["lastName"],
+    "name": f"{user['firstName']} {user['lastName']}",
+}
+
 access = {
     "groups": [
         {
@@ -64,28 +70,24 @@ depositions = [
         "prefix": "JHBMAA",
         "metadata": {
             "titles": [{"title": "Pure Al foil"}],
-            "attributes": {
-                "alternateIdentifiers": [
-                    {
-                        "alternateIdentifier": "Al20230428",
-                        "alternateIdentifierType": "local",
-                    }
-                ]
-            },
+            "alternateIdentifiers": [
+                {
+                    "alternateIdentifier": "Al20230428",
+                    "alternateIdentifierType": "local",
+                }
+            ]
         },
     },
     {
         "prefix": "JHBMAA",
         "metadata": {
             "titles": [{"title": "Pure Al foil"}],
-            "attributes": {
-                "alternateIdentifiers": [
-                    {
-                        "alternateIdentifier": "Al20250520",
-                        "alternateIdentifierType": "local",
-                    }
-                ]
-            },
+            "alternateIdentifiers": [
+                {
+                    "alternateIdentifier": "Al20250520",
+                    "alternateIdentifierType": "local",
+                }
+            ]
         },
     },
 ]
@@ -98,7 +100,9 @@ for deposition in depositions:
             "metadata": json.dumps(deposition["metadata"]),
         },
     )
-    gc.put(f"deposition/{obj['_id']}/access", parameters={"access": json.dumps(access)})
+    print(obj)
+    # gc.put(f"deposition/{obj['_id']}/access", parameters={"access": json.dumps(access)})
+    print("!!!!!!!!!!!!!!!!!!!!")
 
 with open("power_supply_schema.json") as f:
     schema = json.load(f)
@@ -223,7 +227,7 @@ depositions = gc.get("deposition")
 elements = ["Al", "Al"]
 for i, deposition in enumerate(depositions):
     element = elements[i]
-    local_id = deposition["metadata"]["attributes"]["alternateIdentifiers"][0]["alternateIdentifier"]
+    local_id = deposition["metadata"]["alternateIdentifiers"][0]["alternateIdentifier"]
     data = {
         "IGSN": deposition["igsn"],
         "contaminants": "",
