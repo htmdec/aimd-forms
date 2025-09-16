@@ -532,6 +532,19 @@
             "grid_columns": 3,
             "grid_break": true
           }
+        },
+        "shielding": {
+          "type": "string",
+          "description": "Shielding",
+          "enum": [
+            "None",
+            "Triangular",
+            "Other"
+          ],
+          "propertyOrder": 9,
+          "options": {
+            "grid_columns": 3
+          }
         }
       }
     }
