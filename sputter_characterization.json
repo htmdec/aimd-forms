@@ -1,0 +1,382 @@
+{
+  "type": "object",
+  "title": "Weihs Lab Foil Post Processing",
+  "description": "Post processing data for Weihs Lab sputter samples.",
+  "definitions": {
+    "element": {
+      "format": "grid-strict",
+      "type": "string",
+      "title": "Element",
+      "description": "An element symbol.",
+      "pattern": "^[A-Z][a-z]?$",
+      "format": "autocomplete",
+      "options": {
+        "autocomplete": {
+          "search": "search_element",
+          "autoSelect": true,
+          "debounceTime": 500
+        },
+        "grid_columns": 1
+      }
+    },
+    "atomicPercent": {
+      "format": "grid-strict",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/atomicPercentRange"
+        },
+        {
+          "$ref": "#/definitions/atomicPercentValue"
+        }
+      ],
+      "description": "The atomic percent of an element in an alloy."
+    },
+    "atomicPercentRange": {
+      "format": "grid-strict",
+      "type": "object",
+      "title": "Range",
+      "description": "A range of atomic percent values for an element in an alloy.",
+      "options": {
+        "grid_columns": 6
+      },
+      "properties": {
+        "min": {
+          "type": "number",
+          "title": "Minimum",
+          "description": "The minimum atomic percent of the element in the alloy.",
+          "propertyOrder": 1,
+          "options": {
+            "grid_columns": 3
+          },
+          "minimum": 0
+        },
+        "max": {
+          "type": "number",
+          "title": "Maximum",
+          "description": "The maximum atomic percent of the element in the alloy.",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 3
+          },
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "options": {
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true
+      },
+      "required": [
+        "min",
+        "max"
+      ]
+    },
+    "atomicPercentValue": {
+      "format": "grid-strict",
+      "type": "object",
+      "title": "Value",
+      "description": "A specific atomic percent value for an element in an alloy.",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "Value",
+          "description": "The atomic percent of the element in the alloy.",
+          "propertyOrder": 1,
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "options": {
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true,
+        "grid_columns": 3
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "alloyElement": {
+      "type": "object",
+      "title": "Alloy Element",
+      "format": "grid-strict",
+      "description": "An element and its atomic percent in an alloy.",
+      "properties": {
+        "element": {
+          "$ref": "#/definitions/element",
+          "options": {
+            "grid_columns": 1
+          },
+          "propertyOrder": 1
+        },
+        "atomicPercent": {
+          "$ref": "#/definitions/atomicPercent",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 6
+          },
+          "minimum": 0
+        }
+      }
+    },
+    "process": {
+      "type": "object",
+      "title": "Process",
+      "description": "Details of a process applied to the sputter sample.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/thermalProcess"
+        },
+        {
+          "$ref": "#/definitions/rollingProcess"
+        }
+      ]
+    },
+    "thermalProcess": {
+      "type": "object",
+      "title": "Thermal Process",
+      "description": "Details of a thermal process applied to the sputter sample.",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "Title": "Experiment Date",
+          "description": "The experiment date for the thermal processing.",
+          "propertyOrder": 1
+        },
+        "purpose": {
+          "type": "string",
+          "title": "Thermal Processing Purpose",
+          "description": "The purpose of the thermal processing.",
+          "enum": [
+            "homogenization",
+            "aging"
+          ],
+          "default": "homogenization",
+          "propertyOrder": 2
+        },
+        "furnaceType": {
+          "type": "string",
+          "enum": [
+            "HT",
+            "Tube",
+            "Box"
+          ],
+          "default": "HT",
+          "description": "The type of furnace used.",
+          "title": "Furnace Type",
+          "propertyOrder": 3
+        },
+        "environment": {
+          "type": "string",
+          "title": "Thermal Process Conditions",
+          "description": "The annealing conditions used during the thermal processing.",
+          "enum": [
+            "Argon",
+            "Forming Gas",
+            "Vacuum",
+            "Oil Bath"
+          ],
+          "default": "Argon",
+          "propertyOrder": 4
+        },
+        "temperature": {
+          "type": "number",
+          "title": "Temperature (C)",
+          "description": "The temperature of the thermal processing (in degrees Celsius).",
+          "propertyOrder": 5,
+          "minimum": 0
+        },
+        "rampRate": {
+          "type": "number",
+          "title": "Ramp Rate (C/min)",
+          "description": "The ramp rate of the thermal processing (in degrees Celsius per minute).",
+          "propertyOrder": 6,
+          "minimum": 0
+        },
+        "dwellTime": {
+          "type": "number",
+          "title": "Dwell Time (h)",
+          "description": "The time duration of the thermal processing (in hours).",
+          "propertyOrder": 7,
+          "minimum": 0
+        },
+        "quench": {
+          "type": "boolean",
+          "format": "checkbox",
+          "title": "Quench",
+          "description": "Whether the sample was successfully quenched.",
+          "default": false,
+          "propertyOrder": 8
+        },
+        "notes": {
+          "type": "string",
+          "format": "textarea",
+          "description": "Comments about the thermal processing.",
+          "propertyOrder": 9
+        }
+      },
+      "additionalProperties": false,
+      "options": {
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true
+      }
+    },
+    "rangeWithDecrease": {
+      "id": "rangeWithDecrease",
+      "type": "object",
+      "format": "grid-strict",
+      "properties": {
+        "start": {
+          "type": "number",
+          "title": "Start",
+          "description": "The value before the decrease.",
+          "propertyOrder": 1,
+          "minimum": 0,
+          "options": {
+            "grid_columns": 4
+          }
+        },
+        "end": {
+          "type": "number",
+          "title": "End",
+          "description": "The value after the decrease.",
+          "propertyOrder": 2,
+          "minimum": 0,
+          "options": {
+            "grid_columns": 4
+          }
+        },
+        "decrease": {
+          "type": "number",
+          "title": "Decrease (in %)",
+          "template": "{{delta start end}}",
+          "propertyOrder": 3,
+          "watch": {
+            "start": "rangeWithDecrease.start",
+            "end": "rangeWithDecrease.end"
+          },
+          "minimum": 0,
+          "description": "The decrease as a percentage from start to end.",
+          "options": {
+            "grid_columns": 4,
+            "grid_break": true
+          }
+        }
+      }
+    },
+    "rollingProcess": {
+      "id": "rollingProcess",
+      "type": "object",
+      "title": "Rolling Process",
+      "format": "grid-strict",
+      "description": "Details of a rolling process applied to the sputter sample.",
+      "properties": {
+        "rollerSize": {
+          "type": "string",
+          "title": "Rolling Size",
+          "description": "The type of roller used.",
+          "enum": [
+            "Big",
+            "Small"
+          ],
+          "default": "Big",
+          "propertyOrder": 0
+        },
+        "temperatureF": {
+          "type": "number",
+          "title": "Rolling Temperature (F)",
+          "description": "The temperature during the rolling process (in Fahrenheits).",
+          "propertyOrder": 1,
+          "minimum": 0
+        },
+        "temperature": {
+          "type": "number",
+          "title": "Rolling Temperature (C)",
+          "description": "The temperature during the rolling process (in Celsius).",
+          "propertyOrder": 2,
+          "template": "{{FtoC temperatureF}}",
+          "minimum": 0,
+          "watch": {
+            "temperatureF": "rollingProcess.temperatureF"
+          },
+          "options": {
+            "readOnly": true
+          }
+        },
+        "thickness": {
+          "type": "object",
+          "Title": "Thickness (um)",
+          "$ref": "#/definitions/rangeWithDecrease",
+          "propertyOrder": 3,
+          "minimum": 0,
+          "options": {
+            "grid_columns": 12,
+            "grid_break": true
+          }
+        },
+        "numberOfPasses": {
+          "type": "integer",
+          "title": "Number of Passes",
+          "description": "The number of passes during the rolling process.",
+          "propertyOrder": 4,
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "options": {
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true
+      }
+    }
+  },
+  "properties": {
+    "assignedIGSN": {
+      "type": "string",
+      "description": "IGSN of the sample being characterized",
+      "format": "autocomplete",
+      "pattern": "^[A-Z]{6}[0-9]{5}.*$",
+      "options": {
+        "autocomplete": {
+          "search": "search_deposition",
+          "renderResult": "render_deposition",
+          "getResultValue": "get_deposition_value",
+          "autoSelect": true,
+          "debounceTime": 500
+        } 
+      },
+      "propertyOrder": 1
+    },
+    "composition": {
+      "type": "array",
+      "format": "grid-strict",
+      "title": "Expected Composition (at%)",
+      "description": "A list of elements and their atomic fraction in the alloy.",
+      "items": {
+        "$ref": "#/definitions/alloyElement"
+      },
+      "propertyOrder": 2
+    },
+    "processes": {
+      "type": "array",
+      "title": "Post Sputtering Processes",
+      "description": "A list of thermal processes and/or rolling applied to the sputter sample.",
+      "items": {
+        "$ref": "#/definitions/process"
+      },
+      "propertyOrder": 3
+    }
+  },
+  "required": [
+    "assignedIGSN"
+  ],
+  "additionalProperties": false,
+  "options": {
+    "disable_collapse": true,
+    "disable_edit_json": true,
+    "disable_properties": true
+  }
+}

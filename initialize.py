@@ -302,21 +302,27 @@ form = gc.post(
 )
 gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})
 
-with open("xrd_characterization.json") as f:
-    schema = json.load(f)
+for fname in ["xrd_characterization.json", "sputter_characterization.json"]:
+    with open(fname) as f:
+        schema = json.load(f)
 
-form = gc.post(
-    "form",
-    data={"schema": json.dumps(schema)},
-    parameters={
-        "name": schema["title"],
-        "description": schema["description"],
-        "folderId": xrd_folder["_id"],
-        "pathTemplate": None,
-        "entryFileName": None,
-        "gdriveFolderId": None,
-        "jsHelpers": None,
-        "uniqueField": "assignedIGSN",
-    },
-)
-gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})
+    js_helpers = None
+    if os.path.isfile(fname[:-5] + ".js"):
+        js_helpers = rjsmin.jsmin(open(fname[:-5] + ".js", "r").read())
+
+    form = gc.post(
+        "form",
+        data={"schema": json.dumps(schema)},
+        parameters={
+            "name": schema["title"],
+            "description": schema["description"],
+            "folderId": xrd_folder["_id"],
+            "pathTemplate": None,
+            "entryFileName": None,
+            "gdriveFolderId": None,
+            "jsHelpers": js_helpers,
+            "uniqueField": "assignedIGSN",
+            "postEntryTask": "relate_entry_to_igsn(assignedIGSN)",
+        },
+    )
+    gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})
