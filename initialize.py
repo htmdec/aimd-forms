@@ -302,7 +302,11 @@ form = gc.post(
 )
 gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})
 
-for fname in ["xrd_characterization.json", "sputter_characterization.json"]:
+
+unique_fields = ["assignedIGSN", "uniqueId"]
+relate = ["assignedIGSN", "IGSN"]
+
+for i, fname in enumerate(["xrd_characterization.json", "sputter_characterization.json"]):
     with open(fname) as f:
         schema = json.load(f)
 
@@ -321,8 +325,8 @@ for fname in ["xrd_characterization.json", "sputter_characterization.json"]:
             "entryFileName": None,
             "gdriveFolderId": None,
             "jsHelpers": js_helpers,
-            "uniqueField": "assignedIGSN",
-            "postEntryTask": "relate_entry_to_igsn(assignedIGSN)",
+            "uniqueField": unique_fields[i],
+            "postEntryTask": f"relate_entry_to_igsn({relate[i]})",
         },
     )
     gc.put(f"form/{form['_id']}/access", parameters={"access": json.dumps(access)})

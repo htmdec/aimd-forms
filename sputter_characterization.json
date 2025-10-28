@@ -4,12 +4,11 @@
   "description": "Post processing data for Weihs Lab sputter samples.",
   "definitions": {
     "element": {
-      "format": "grid-strict",
+      "format": "autocomplete",
       "type": "string",
       "title": "Element",
       "description": "An element symbol.",
       "pattern": "^[A-Z][a-z]?$",
-      "format": "autocomplete",
       "options": {
         "autocomplete": {
           "search": "search_element",
@@ -37,7 +36,9 @@
       "title": "Range",
       "description": "A range of atomic percent values for an element in an alloy.",
       "options": {
-        "grid_columns": 6
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true
       },
       "properties": {
         "min": {
@@ -62,11 +63,6 @@
         }
       },
       "additionalProperties": false,
-      "options": {
-        "disable_collapse": true,
-        "disable_edit_json": true,
-        "disable_properties": true
-      },
       "required": [
         "min",
         "max"
@@ -334,19 +330,33 @@
     }
   },
   "properties": {
-    "assignedIGSN": {
+    "uniqueId": {
       "type": "string",
-      "description": "IGSN of the sample being characterized",
-      "format": "autocomplete",
-      "pattern": "^[A-Z]{6}[0-9]{5}.*$",
-      "options": {
-        "autocomplete": {
-          "search": "search_deposition",
-          "renderResult": "render_deposition",
-          "getResultValue": "get_deposition_value",
-          "autoSelect": true,
-          "debounceTime": 500
-        } 
+      "title": "Unique ID",
+      "description": "A unique identifier for this post processing entry.",
+      "propertyOrder": 0,
+      "pattern": "^[A-Z][a-z]?$"
+    },
+    "IGSN": {
+      "type": "array",
+      "title": "Pertinent Samples",
+      "uniqueItems": true,
+      "minItems": 1,
+      "description": "A list of samples that underwent this post processing.",
+      "items": {
+        "type": "string",
+        "description": "IGSN of the sample being characterized",
+        "format": "autocomplete",
+        "pattern": "^[A-Z]{6}[0-9]{5}.*$",
+        "options": {
+          "autocomplete": {
+            "search": "search_deposition",
+            "renderResult": "render_deposition",
+            "getResultValue": "get_deposition_value",
+            "autoSelect": true,
+            "debounceTime": 500
+          }
+        }
       },
       "propertyOrder": 1
     },
@@ -371,7 +381,8 @@
     }
   },
   "required": [
-    "assignedIGSN"
+    "uniqueId",
+    "IGSN"
   ],
   "additionalProperties": false,
   "options": {
