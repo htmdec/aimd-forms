@@ -334,8 +334,7 @@
       "type": "string",
       "title": "Unique ID",
       "description": "A unique identifier for this post processing entry.",
-      "propertyOrder": 0,
-      "pattern": "^[A-Z][a-z][0-9]?$"
+      "propertyOrder": 0
     },
     "IGSN": {
       "type": "array",
