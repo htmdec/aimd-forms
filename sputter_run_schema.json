@@ -184,7 +184,7 @@
         "subRows": {
           "type": "integer",
           "propertyOrder": 7,
-          "description": "Number of rows on each substrate",
+          "description": "Number of rows on each substrate (including the buffer)",
           "default": 6,
           "options": {
             "titleHidden": true,
@@ -194,7 +194,7 @@
         "subCols": {
           "type": "integer",
           "propertyOrder": 8,
-          "description": "Number of columns on each substrate",
+          "description": "Number of columns on each substrate (including the buffer)",
           "default": 3,
           "options": {
             "titleHidden": true,
