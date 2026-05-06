@@ -185,7 +185,7 @@
           "type": "integer",
           "propertyOrder": 7,
           "description": "Number of rows on each substrate (including the buffer)",
-          "default": 6,
+          "default": 8,
           "options": {
             "titleHidden": true,
             "grid_columns": 3
@@ -195,7 +195,7 @@
           "type": "integer",
           "propertyOrder": 8,
           "description": "Number of columns on each substrate (including the buffer)",
-          "default": 3,
+          "default": 5,
           "options": {
             "titleHidden": true,
             "grid_columns": 3,
