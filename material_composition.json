@@ -1,0 +1,269 @@
+{
+  "type": "object",
+  "title": "AIMDL Sample Composition",
+  "description": "A schema for representing the composition of a sample in terms of its elemental composition, including measured or expected atomic percent values for each element.",
+  "definitions": {
+    "element": {
+      "format": "autocomplete",
+      "type": "string",
+      "title": "Element",
+      "description": "An element symbol.",
+      "pattern": "^[A-Z][a-z]?$",
+      "options": {
+        "autocomplete": {
+          "search": "search_element",
+          "getResultValue": "get_element_value",
+          "autoSelect": true,
+          "debounceTime": 500
+        }
+      }
+    },
+    "atomicPercent": {
+      "format": "grid-strict",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/atomicPercentRange"
+        },
+        {
+          "$ref": "#/definitions/atomicPercentValue"
+        }
+      ],
+      "description": "The atomic percent of an element in an material."
+    },
+    "atomicPercentRange": {
+      "format": "grid-strict",
+      "type": "object",
+      "title": "Range",
+      "description": "A range of atomic percent values for an element in an material.",
+      "options": {
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true
+      },
+      "properties": {
+        "min": {
+          "type": "number",
+          "title": "Minimum",
+          "description": "The minimum atomic percent of the element in the material.",
+          "propertyOrder": 1,
+          "options": {
+            "grid_columns": 3
+          },
+          "minimum": 0
+        },
+        "stdmin": {
+          "type": ["null", "number"],
+          "title": "σ min",
+          "description": "The standard deviation of the minimum atomic percent of the element in the material.",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 3
+          },
+          "minimum": 0
+        },
+        "max": {
+          "type": "number",
+          "title": "Maximum",
+          "description": "The maximum atomic percent of the element in the material.",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 3
+          },
+          "minimum": 0
+        },
+        "stdmax": {
+          "type": ["null", "number"],
+          "title": "σ max",
+          "description": "The standard deviation of the maximum atomic percent of the element in the material.",
+          "propertyOrder": 4,
+          "options": {
+            "grid_columns": 3
+          },
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ]
+    },
+    "atomicPercentValue": {
+      "format": "grid-strict",
+      "type": "object",
+      "title": "Value",
+      "description": "A specific atomic percent value for an element in an material.",
+      "properties": {
+        "value": {
+          "type": "number",
+          "title": "value",
+          "description": "The atomic percent of the element in the material.",
+          "propertyOrder": 1,
+          "options": {
+            "grid_columns": 6
+          },
+          "minimum": 0
+        },
+        "std": {
+          "type": ["null", "number"],
+          "title": "σ value",
+          "description": "The standard deviation of the atomic percent of the element in the material.",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 6
+          },
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "options": {
+        "disable_collapse": true,
+        "disable_edit_json": true,
+        "disable_properties": true,
+        "grid_columns": 3
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "materialElement": {
+      "type": "object",
+      "title": "Material Element",
+      "format": "grid-strict",
+      "description": "An element and its atomic percent in an material.",
+      "properties": {
+        "element": {
+          "$ref": "#/definitions/element",
+          "options": {
+            "grid_columns": 2
+          },
+          "propertyOrder": 1
+        },
+        "atomicPercent": {
+          "$ref": "#/definitions/atomicPercent",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 10
+          },
+          "minimum": 0
+        }
+      }
+    },
+    "composition": {
+      "type": "array",
+      "format": "grid-strict",
+      "title": "Composition (at%)",
+      "description": "A list of elements and their atomic fraction in the material.",
+      "items": {
+        "$ref": "#/definitions/materialElement"
+      },
+      "propertyOrder": 2
+    },
+    "dataPoint": {
+      "type": "object",
+      "format": "grid-strict",
+      "title": "Measured or expected composition (at%)",
+      "description": "A data point representing the measured or expected composition of an material.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "title": "Kind of data point",
+          "description": "The kind of data point (e.g., 'measured', 'expected').",
+          "enum": [
+            "measured",
+            "expected"
+          ],
+          "options": {
+            "grid_columns": 3,
+            "grid_break": true
+          },
+          "propertyOrder": 1
+        },
+        "composition": {
+          "$ref": "#/definitions/composition",
+          "propertyOrder": 2,
+          "options": {
+            "grid_columns": 12,
+            "grid_break": true
+          }
+        },
+        "source": {
+          "type": "string",
+          "title": "Source",
+          "description": "The source of the data point (e.g., 'EDX', 'XRF', 'calculation').",
+          "options": {
+            "grid_columns": 3
+          },
+          "propertyOrder": 3
+        },
+        "location": {
+          "type": "object",
+          "title": "Location",
+          "description": "An optional location where the data point was measured.",
+          "properties": {
+            "sampleX": {
+              "type": ["null", "number"],
+              "title": "x (mm)",
+              "description": "The X coordinate of the measurement location.",
+              "propertyOrder": 1,
+              "options": {
+                "grid_columns": 6
+              }
+            },
+            "sampleY": {
+              "type": ["null", "number"],
+              "title": "y (mm)",
+              "description": "The Y coordinate of the measurement location.",
+              "propertyOrder": 2,
+              "options": {
+                "grid_columns": 6
+              }
+            }
+          },
+          "options": {
+            "grid_columns": 9
+          },
+          "propertyOrder": 4
+        }
+      }
+    }
+  },
+  "properties": {
+    "assignedIGSN": {
+      "type": "string",
+      "title": "Sample IGSN",
+      "description": "A sample being described by this data.",
+      "format": "autocomplete",
+      "pattern": "^[A-Z]{6}[0-9]{5}.*$",
+      "options": {
+        "autocomplete": {
+          "search": "search_deposition",
+          "renderResult": "render_deposition",
+          "getResultValue": "get_deposition_value",
+          "autoSelect": true,
+          "debounceTime": 500
+        }
+      },
+      "propertyOrder": 0
+    },
+    "data": {
+      "type": "array",
+      "format": "grid-strict",
+      "title": "List of measured or expected composition (at%)",
+      "description": "A list of data points representing the measured or expected composition of the material.",
+      "items": {
+        "$ref": "#/definitions/dataPoint"
+      },
+      "propertyOrder": 2
+    }
+  },
+  "required": [
+    "assignedIGSN"
+  ],
+  "additionalProperties": false,
+  "options": {
+    "disable_collapse": true,
+    "disable_edit_json": true,
+    "disable_properties": true
+  }
+}
