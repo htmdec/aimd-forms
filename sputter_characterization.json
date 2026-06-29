@@ -30,7 +30,7 @@
               "dateFormat": "Y-m-d"
             }
           },
-          "Title": "Experiment Date",
+          "title": "Experiment Date (YYYY-MM-DD)",
           "description": "The experiment date for the thermal processing.",
           "propertyOrder": 1
         },
