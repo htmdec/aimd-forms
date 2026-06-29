@@ -24,6 +24,12 @@
         "date": {
           "type": "string",
           "format": "date",
+          "options": {
+            "flatpickr": {
+              "allowInput": true,
+              "dateFormat": "Y-m-d"
+            }
+          },
           "Title": "Experiment Date",
           "description": "The experiment date for the thermal processing.",
           "propertyOrder": 1
